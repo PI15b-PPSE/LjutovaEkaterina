@@ -32,6 +32,12 @@ function checkBomb(bmb) {
      if (bmb[0] === bombs[b][0] && bmb[1] === bombs[b][1]) {
      exists = true;
      break;
- }
- }
+}
+}
      return exists;
+ // получить ячейку
+function getCell(ri, ci) {
+     var row = $("table.sapper-table>tbody>tr")[ri];
+     var cell = $(row).find("td > div")[ci];
+     return $(cell);
+}
