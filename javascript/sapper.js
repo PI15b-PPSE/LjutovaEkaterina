@@ -25,3 +25,13 @@ function getRandomRowIndex() {
 function getBomb() {
     return [getRandomRowIndex(), getRandomColumnIndex()];
 }
+// Проверить существование бомбы по массиву с координатами
+function checkBomb(bmb) {
+     var exists = false;
+     for (var b = 0; b < bombs.length; b++) {
+     if (bmb[0] === bombs[b][0] && bmb[1] === bombs[b][1]) {
+     exists = true;
+     break;
+ }
+ }
+     return exists;
