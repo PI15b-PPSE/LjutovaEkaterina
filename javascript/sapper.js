@@ -1,15 +1,25 @@
-// количество строк
-var rowsCount = parseInt($("table.sapper-table").attr("data-rows-count"));
-// количество колонок
-var columnsCount = parseInt($("table.sapper-table").attr("data-columns-count"));
-// количество бомб
-var bombCount = parseInt($("table.sapper-table").attr("data-bomb-count"));
-// бомбы
-var bombs = [];
-// секунды таймера
-var seconds = 0;
-// игра окончена
-var gameOver = false;
+$(document).ready(function () {
+    $(document).delegate("button[data-toggle='change-size']", "click", changeSizeHandler);
+    loadGame();
+});
+function changeSizeHandler(e) {
+    e.preventDefault();
+    var button = $(this);
+    var attrs = ["data-rows-count", "data-columns-count", "data-bomb-count"];
+    for (var i = 0; i < attrs.length; i++) {
+        $("table.sapper-table:first").attr(attrs[i], button.attr(attrs[i]));
+    }
+    var columns = parseInt(button.attr("data-columns-count"));
+    var width = columns * 30 + 2;
+    $("div.panel.sapper-table:first").width(width);
+    loadGame();
+}
+
+function loadGame() {
+    $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-refresh").remove();
+    $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-count-icon").remove();
+    $("div.panel.sapper-table:first>.panel-heading>.panel-title span.timer").remove();
+    $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-count").remove();
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -40,4 +50,5 @@ function getCell(ri, ci) {
      var row = $("table.sapper-table>tbody>tr")[ri];
      var cell = $(row).find("td > div")[ci];
      return $(cell);
+}
 }
