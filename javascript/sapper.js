@@ -64,4 +64,20 @@ function getCell(ri, ci) {
      var cell = $(row).find("td > div")[ci];
      return $(cell);
 }
+// проверка ячейки, что она ещё не открыта
+    function checkCell(cell) {
+        return cell.hasClass("cell-closed") && cell.attr("data-flag") === undefined;
+    }
+    // установить окончание игры
+    function setGameOver() {
+        gameOver = true;
+        var table = $("table.sapper-table:first");
+        var tr = document.createElement("tr");
+        var td = document.createElement("td");
+        td.setAttribute("colspan", columnsCount);
+        td.setAttribute("class", "game-over");
+        td.innerHTML = "Game Over";
+        tr.appendChild(td);
+        table.append(tr);
+    }
 }
