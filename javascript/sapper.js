@@ -80,4 +80,33 @@ function getCell(ri, ci) {
         tr.appendChild(td);
         table.append(tr);
     }
+	// проверить ячейки вокруг ячейки с указанными координатами
+    function lookAround(ri, ci, funct) {
+        var beginRowIndex = ri === 0 ? 0 : ri - 1;
+        var endRowIndex = ri === rowsCount - 1 ? rowsCount - 1 : ri + 1;
+        var beginColumnIndex = ci === 0 ? 0 : ci - 1;
+        var endColumnIndex = ci === columnsCount - 1 ? columnsCount - 1 : ci + 1;
+        for (var bri = beginRowIndex; bri <= endRowIndex; bri++) {
+            for (var bci = beginColumnIndex; bci <= endColumnIndex; bci++) {
+                if (ri === bri && ci === bci) {
+                    continue;
+                }
+                funct(bri, bci);
+            }
+        }
+    }
+    // очистить ячейки вокруг с проверкой вокруг пустых ячеек
+    function clearAround(cell, ri, ci) {
+        lookAround(ri, ci, function (ri2, ci2) {
+            var cell2 = getCell(ri2, ci2);
+            if (checkCell(cell2)) {
+                clearCell(cell2);
+                if (countBombsAround(ri2, ci2) === 0) {
+                    clearAround(cell2, ri2, ci2);
+                } else {
+                    drawNumber(cell2, ri2, ci2);
+                }
+            }
+        });
+    }
 }
