@@ -10,7 +10,9 @@ function changeSizeHandler(e) {
         $("table.sapper-table:first").attr(attrs[i], button.attr(attrs[i]));
     }
     var columns = parseInt(button.attr("data-columns-count"));
-    var width = columns * 20 + 2;
+
+    var width = columns * 30 + 2;
+
     $("div.panel.sapper-table:first").width(width);
     loadGame();
 }
