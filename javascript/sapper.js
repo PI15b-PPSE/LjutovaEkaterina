@@ -20,6 +20,19 @@ function loadGame() {
     $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-count-icon").remove();
     $("div.panel.sapper-table:first>.panel-heading>.panel-title span.timer").remove();
     $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-count").remove();
+	 // количество строк
+    var rowsCount = parseInt($("table.sapper-table").attr("data-rows-count"));
+    // количество колонок
+    var columnsCount = parseInt($("table.sapper-table").attr("data-columns-count"));
+    // количество бомб
+    var bombCount = parseInt($("table.sapper-table").attr("data-bomb-count"));
+    // бомбы
+    var bombs = [];
+    // секунды таймера
+    var seconds = 0;
+    // игра окончена
+    var gameOver = false;
+    // использование Math.round() даст неравномерное распределение!
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
