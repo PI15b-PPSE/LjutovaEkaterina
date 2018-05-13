@@ -171,4 +171,65 @@ function getCell(ri, ci) {
         }
         checkClosedCells();
     }
+	 // Добавить отметку бомбы (флаг)
+    function addFlag(cell) {
+        if (cell.attr("data-flag") === "true") {
+            cell.removeClass("glyphicon")
+                .removeClass("glyphicon-map-marker")
+                .removeAttr("data-flag");
+        } else {
+            if (getCountNotMarkedBombs() <= 0) {
+                return false;
+            }
+            cell.addClass("glyphicon")
+                .addClass("glyphicon-map-marker")
+                .attr("data-flag", "true");
+        }
+        displayCountBombs();
+    }
+    // создать бомбы
+    function createBombs(firstCell) {
+        bombs = [];
+        for (var i = 0; i < bombCount; i++) {
+            var bomb = getBomb();
+            // если бомба с такими координатами уже есть, то пересоздадим
+            while (checkBomb(bomb) || bomb[0] === firstCell[0] && bomb[1] === firstCell[1]) {
+                bomb = getBomb();
+            }
+            bombs.push(bomb);
+        }
+    }
+    // первый клик
+    function firstClick(firstCell) {
+        if ($("table.sapper-table[data-timer]").length < 1) {
+            createBombs(firstCell);
+            startTimer();
+        }
+    }
+    // Обновить время на таймере
+    function updateTimer() {
+        if (gameOver) {
+            stopTimer();
+            return;
+        }
+        var date = new Date(seconds * 1000);
+        var span = $("div.panel.sapper-table:first>.panel-heading>.panel-title span.timer");
+        span.text(date.toTimeString().substr(3, 5));
+        if ($("table.sapper-table[data-timer]").length < 1) {
+            return;
+        }
+        seconds++;
+        setTimeout(updateTimer, 1000);
+    }
+    // Запустить таймер
+    function startTimer() {
+        seconds = 0;
+        gameOver = false;
+        $("table.sapper-table").attr("data-timer", "true");
+        updateTimer();
+    }
+    // Остановить таймер
+    function stopTimer() {
+        $("table.sapper-table").removeAttr("data-timer");
+    }
 }
