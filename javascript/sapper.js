@@ -232,4 +232,84 @@ function getCell(ri, ci) {
     function stopTimer() {
         $("table.sapper-table").removeAttr("data-timer");
     }
+	 // Считаем количество оставшихся маркеров
+    function getCountNotMarkedBombs() {
+        var count = bombCount - $("table.sapper-table:first>tbody>tr>td>div[data-flag]").length;
+        return count;
+    }
+    // Отобразить оставшееся количество бомб
+    function displayCountBombs() {
+        var span = $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-count");
+        span.text(getCountNotMarkedBombs());
+    }
+    // Отобразить победу
+    function displayWin() {
+        stopTimer();
+        var spanWin = document.createElement("span");
+        $(spanWin).addClass("text-win").text("You win!");
+        $("div.panel.sapper-table:first>.panel-heading>.panel-title").append(spanWin);
+        setGameOver();
+    }
+    // Отобразить проигрыш
+    function displayLose() {
+        stopTimer();
+        var spanLose = document.createElement("span");
+        $(spanLose).addClass("text-lose").text("You lose!");
+        $("div.panel.sapper-table:first>.panel-heading>.panel-title").append(spanLose);
+        setGameOver();
+    }
+    // фабрика обработчика отпускания кнопок мыши с координатами ячейки
+    function mouseHandlerFactory(rowIndex, colIndex) {
+        return function (e) {
+            var cell = $(this);
+            document.onmouseup = undefined;
+            console.log("mouseup");
+            console.log("button", e.button);
+            switch (e.button) {
+                case 0:
+                    leftButtonHandler(cell, rowIndex, colIndex);
+                    break;
+                case 2:
+                    rigthButtonHandler(cell);
+                    break;
+            }
+        };
+    }
+    // обработчик отпущенной правой кнопки мыши
+    function rigthButtonHandler(cell) {
+        if (!cell.hasClass("cell-closed")) {
+            return;
+        }
+        addFlag(cell);
+    }
+    // обработчик нажатия кнопки мыши
+    function mousedownHandler(e) {
+        console.log("mousedown");
+        if (e.button === 0) {
+            var cell = $(this);
+            cell.removeClass("cell-closed");
+            document.onmouseup = function () { cell.addClass("cell-closed"); };
+        }
+    }
+    // обработчик нажатия на ячейку
+    function leftButtonHandler(cell, rowIndex, colIndex) {
+        var coord = [rowIndex, colIndex];
+        // проверка первого клика для создания бомб
+        firstClick(coord);
+        // Если на ячейке стоит метка, то выйдем
+        if (cell.attr("data-flag") === "true") {
+            return;
+        }
+        // проверим нажатую ячейку на существование бомбы в ней
+        if (checkBomb(coord)) {
+            // покажем все бомбы
+            drawAllBombs();
+        } else {
+            // нарисуем цифру или очистим ячейки
+            drawNumber(cell, rowIndex, colIndex);
+        }
+    }
+    function crtElm(tag) {
+        return document.createElement(tag);
+    }
 }
