@@ -111,4 +111,33 @@ function getCell(ri, ci) {
             }
         });
     }
+	// подсчитать кол-во бомб вокруг ячейки по её координатам
+    function countBombsAround(ri, ci) {
+        var count = 0;
+        for (var bi = 0; bi < bombCount; bi++) {
+            var bomb = bombs[bi];
+            if (bomb[0] > ri - 2 && bomb[0] < ri + 2 && bomb[1] > ci - 2 && bomb[1] < ci + 2) {
+                count++;
+            }
+        }
+        return count;
+    }
+    // нарисовать бомбу в ячейке
+    function drawBomb(ri, ci) {
+        var cell = getCell(ri, ci);
+        clearCell(cell);
+        cell.removeClass("glyphicon-map-marker")
+            .removeClass("cell-closed")
+            .removeAttr("data-flag")
+            .addClass("glyphicon")
+            .addClass("glyphicon-remove-sign")
+            .addClass("cell-bomb");
+    }
+    // Отобразить все бомбы
+    function drawAllBombs() {
+        for (var q = 0; q < bombs.length; q++) {
+            drawBomb(bombs[q][0], bombs[q][1]);
+        }
+        displayLose();
+    }
 }
