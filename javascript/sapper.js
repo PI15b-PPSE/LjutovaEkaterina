@@ -140,4 +140,35 @@ function getCell(ri, ci) {
         }
         displayLose();
     }
+	// очистить ячейку
+    function clearCell(cell) {
+        if (!checkCell(cell)) {
+            return;
+        }
+        cell.removeClass("cell-closed");
+    }
+    // подсчитаем количество оставшихся закрытых ячеек и сравним с количеством бомб
+    function checkClosedCells() {
+        if ($("table.sapper-table > tbody > tr > td > div.cell-closed").length === bombCount) {
+            displayWin();
+        }
+    }
+    // проставить число количества бомб вокруг ячейки
+    function drawNumber(cell, ri, ci) {
+        // подсчитаем количество бомб вокруг ячеек
+        var count = countBombsAround(ri, ci);
+        console.log("count=", count);
+        // очистим ячейку
+        clearCell(cell);
+        if (count > 0) {
+            // если вокруг есть бомбы, то рисуем цифру
+            cell.text(count);
+            cell.addClass("cell-number")
+                .addClass("number" + count);
+        } else {
+            // иначе очищаем ячейки вокруг
+            clearAround(cell, ri, ci);
+        }
+        checkClosedCells();
+    }
 }
