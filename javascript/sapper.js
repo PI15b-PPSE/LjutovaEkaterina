@@ -44,10 +44,14 @@ function loadGame() {
     function getRandomRowIndex() {
         return getRandomInt(0, rowsCount - 1);
     }
+//функция для создания бомбы со случайными координатами
+/**
+* @return void возвращает случайное число колонок и строк
+*/
     // Создать бомбу со случайными координатами
-    function getBomb() {
+function getBomb() {
         return [getRandomRowIndex(), getRandomColumnIndex()];
-    }
+}
     // Проверить существование бомбы по массиву с координатами
     function checkBomb(bmb) {
         var exists = false;
