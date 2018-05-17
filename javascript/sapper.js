@@ -32,48 +32,79 @@ function loadGame() {
     var seconds = 0;
     // игра окончена
     var gameOver = false;
-    // использование Math.round() даст неравномерное распределение!
+    /**
+    * Функция для рандомизации строк/столбцов
+    *
+    *метод random даст равномерное распределение
+    *
+    */
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    // Случайное число для колонки от 0 до кол-ва столбцов -1
+    /*
+    *Функция для получения случайного числа для колонки
+    *
+    число будет в диапазоне от 0 до кол-во столбцов-1
+    *
+    */
     function getRandomColumnIndex() {
         return getRandomInt(0, columnsCount - 1);
     }
-    // Случайное число для строки от 0 до кол-ва строк -1
+     /*
+    *Функция для получения случайного числа для столбца
+    *
+    число будет в диапазоне от 0 до кол-во колонок-1
+    *
+    */
     function getRandomRowIndex() {
         return getRandomInt(0, rowsCount - 1);
     }
 //функция для создания бомбы со случайными координатами
 /**
-* @return void возвращает случайное число колонок и строк
+* @return возвращает случайное число колонок и строк
 */
-    // Создать бомбу со случайными координатами
+// Создать бомбу со случайными координатами
 function getBomb() {
         return [getRandomRowIndex(), getRandomColumnIndex()];
 }
-    // Проверить существование бомбы по массиву с координатами
-    function checkBomb(bmb) {
+/*
+*Функция для проверки существование бомбы
+*
+проверяются координаты по массиву
+если бомба существует флаг = true
+*
+*/
+function checkBomb(bmb) {
+        //флаг существования бомбы
         var exists = false;
         for (var b = 0; b < bombs.length; b++) {
-            if (bmb[0] === bombs[b][0] && bmb[1] === bombs[b][1]) {
+        if (bmb[0] === bombs[b][0] && bmb[1] === bombs[b][1]) {
                 exists = true;
                 break;
             }
         }
         return exists;
-    }
-    // получить ячейку
-    function getCell(ri, ci) {
+}
+/*
+*Функция для получения ячейки
+*
+*/
+function getCell(ri, ci) {
         var row = $("table.sapper-table>tbody>tr")[ri];
         var cell = $(row).find("td > div")[ci];
         return $(cell);
-    }
-    // проверка ячейки, что она ещё не открыта
-    function checkCell(cell) {
+}
+/*
+*Функция для проверки ячейки,что она еще не открыта
+*
+*/    
+function checkCell(cell) {
         return cell.hasClass("cell-closed") && cell.attr("data-flag") === undefined;
-    }
-    // установить окончание игры
+}
+/*
+*Функция для установки окончания игры
+*
+*/ 
     function setGameOver() {
         gameOver = true;
         var table = $("table.sapper-table:first");
@@ -85,13 +116,22 @@ function getBomb() {
         tr.appendChild(td);
         table.append(tr);
     }
-    // проверить ячейки вокруг ячейки с указанными координатами
-    function lookAround(ri, ci, funct) {
+/*
+*Функция для проверки ячейки вокруг текущей ячейки с указанными координатами
+*
+*/    
+function lookAround(ri, ci, funct) {
+        //первая строка
         var beginRowIndex = ri === 0 ? 0 : ri - 1;
+        //последняя строка
         var endRowIndex = ri === rowsCount - 1 ? rowsCount - 1 : ri + 1;
+        //первая колонка
         var beginColumnIndex = ci === 0 ? 0 : ci - 1;
+        //последняя колонка
         var endColumnIndex = ci === columnsCount - 1 ? columnsCount - 1 : ci + 1;
+        //проход по строкам
         for (var bri = beginRowIndex; bri <= endRowIndex; bri++) {
+            //проход по столбцам
             for (var bci = beginColumnIndex; bci <= endColumnIndex; bci++) {
                 if (ri === bri && ci === bci) {
                     continue;
@@ -99,63 +139,97 @@ function getBomb() {
                 funct(bri, bci);
             }
         }
-    }
-    // очистить ячейки вокруг с проверкой вокруг пустых ячеек
-    function clearAround(cell, ri, ci) {
+}
+/*
+*Функция для очистки ячейки вокруг с проверкой вокруг пустых ячеек
+*
+*/
+function clearAround(cell, ri, ci) {
         lookAround(ri, ci, function (ri2, ci2) {
             var cell2 = getCell(ri2, ci2);
             if (checkCell(cell2)) {
-                clearCell(cell2);
-                if (countBombsAround(ri2, ci2) === 0) {
+            clearCell(cell2);
+            //если ячейка пустая, очистить ячейки вокруг иначе
+            if (countBombsAround(ri2, ci2) === 0) {
                     clearAround(cell2, ri2, ci2);
-                } else {
+             } 
+             else {
+                    //иначе вызов функции подсчета кол-ва бомб возле текущей ячейки
                     drawNumber(cell2, ri2, ci2);
-                }
-            }
-        });
-    }
-    // подсчитать кол-во бомб вокруг ячейки по её координатам
-    function countBombsAround(ri, ci) {
+             }
+             }
+          });
+}
+/*
+*Функция для подсчёта кол-ва бомб вокруг ячейки по её координатам
+*
+*возвращает кол-во бомб
+*/ 
+function countBombsAround(ri, ci) {
+        //счетчик
         var count = 0;
+        //проход по циклу
         for (var bi = 0; bi < bombCount; bi++) {
-            var bomb = bombs[bi];
+            //нахождение бомбы
+        var bomb = bombs[bi];
+            //если бомба находится возле текущей ячейки, приплюсовываем к счетчику
             if (bomb[0] > ri - 2 && bomb[0] < ri + 2 && bomb[1] > ci - 2 && bomb[1] < ci + 2) {
                 count++;
             }
         }
         return count;
-    }
-    // нарисовать бомбу в ячейке
-    function drawBomb(ri, ci) {
+}
+/*
+*Функция для отрисовки бомбы в ячейке
+*
+*/
+function drawBomb(ri, ci) {
+        //получение ячейки
         var cell = getCell(ri, ci);
+        //очистка ячейки
         clearCell(cell);
         cell.removeClass("glyphicon-map-marker")
             .removeClass("cell-closed")
             .removeAttr("data-flag")
             .addClass("glyphicon")
             .addClass("glyphicon-remove-sign")
+            //добавление бомбы
             .addClass("cell-bomb");
-    }
-    // Отобразить все бомбы
-    function drawAllBombs() {
-        for (var q = 0; q < bombs.length; q++) {
-            drawBomb(bombs[q][0], bombs[q][1]);
-        }
-        displayLose();
-    }
-    // очистить ячейку
-    function clearCell(cell) {
+}
+/*
+*Функция для отображения всех бомб 
+*
+*все бомбы отображаются при проигрыше
+*
+*/ 
+function drawAllBombs() {
+   for (var q = 0; q < bombs.length; q++) {
+   drawBomb(bombs[q][0], bombs[q][1]);
+   }
+   //функция отображения проигрыша
+   displayLose();
+}
+/*
+*Функция очистки ячейки
+*
+*/
+function clearCell(cell) {
         if (!checkCell(cell)) {
             return;
         }
         cell.removeClass("cell-closed");
-    }
-    // подсчитаем количество оставшихся закрытых ячеек и сравним с количеством бомб
-    function checkClosedCells() {
+}
+/*
+*Функция подсчета кол-ва оставшихся закрытых ячеек
+*
+*/ 
+function checkClosedCells() {
+        //сравнение ячеек с количеством бомб
         if ($("table.sapper-table > tbody > tr > td > div.cell-closed").length === bombCount) {
-            displayWin();
+        //отображение выигрыша
+        displayWin();
         }
-    }
+}
     // проставить число количества бомб вокруг ячейки
     function drawNumber(cell, ri, ci) {
         // подсчитаем количество бомб вокруг ячеек
