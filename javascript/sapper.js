@@ -230,8 +230,11 @@ function checkClosedCells() {
         displayWin();
         }
 }
-    // проставить число количества бомб вокруг ячейки
-    function drawNumber(cell, ri, ci) {
+/*
+*Функция определения числа кол-ва бомб вокруг ячейки
+*
+*/   
+function drawNumber(cell, ri, ci) {
         // подсчитаем количество бомб вокруг ячеек
         var count = countBombsAround(ri, ci);
         console.log("count=", count);
@@ -247,9 +250,12 @@ function checkClosedCells() {
             clearAround(cell, ri, ci);
         }
         checkClosedCells();
-    }
-    // Добавить отметку бомбы (флаг)
-    function addFlag(cell) {
+}
+/*
+*Функция для добавления отметки бомбы(флаг)
+*
+*/
+function addFlag(cell) {
         if (cell.attr("data-flag") === "true") {
             cell.removeClass("glyphicon")
                 .removeClass("glyphicon-map-marker")
@@ -263,8 +269,11 @@ function checkClosedCells() {
                 .attr("data-flag", "true");
         }
         displayCountBombs();
-    }
-    // создать бомбы
+}
+/*
+*Функция для создания бомбы
+*
+*/
     function createBombs(firstCell) {
         bombs = [];
         for (var i = 0; i < bombCount; i++) {
@@ -276,66 +285,95 @@ function checkClosedCells() {
             bombs.push(bomb);
         }
     }
-    // первый клик
-    function firstClick(firstCell) {
+/*
+*Обработчик первого клика мыши по любой ячейки
+*
+*после нажатия начинается игра и запускается таймер
+*/
+function firstClick(firstCell) {
         if ($("table.sapper-table[data-timer]").length < 1) {
+            //создание бомб
             createBombs(firstCell);
+            //запуск таймера
             startTimer();
         }
+}
+/*
+*Функция обновления время на таймере
+*
+*/
+function updateTimer() {
+     if (gameOver) {
+     stopTimer();
+     return;
+     }
+     var date = new Date(seconds * 1000);
+     var span = $("div.panel.sapper-table:first>.panel-heading>.panel-title span.timer");
+     span.text(date.toTimeString().substr(3, 5));
+     if ($("table.sapper-table[data-timer]").length < 1) {
+     return;
+     }
+     seconds++;
+     setTimeout(updateTimer, 1000);
     }
-    // Обновить время на таймере
-    function updateTimer() {
-        if (gameOver) {
-            stopTimer();
-            return;
-        }
-        var date = new Date(seconds * 1000);
-        var span = $("div.panel.sapper-table:first>.panel-heading>.panel-title span.timer");
-        span.text(date.toTimeString().substr(3, 5));
-        if ($("table.sapper-table[data-timer]").length < 1) {
-            return;
-        }
-        seconds++;
-        setTimeout(updateTimer, 1000);
-    }
-    // Запустить таймер
-    function startTimer() {
+/*
+*Функция запуска таймера
+*
+*/
+function startTimer() {
         seconds = 0;
         gameOver = false;
         $("table.sapper-table").attr("data-timer", "true");
         updateTimer();
-    }
-    // Остановить таймер
-    function stopTimer() {
-        $("table.sapper-table").removeAttr("data-timer");
-    }
+}
+/*
+*Функция остановки таймера
+*
+*/
+function stopTimer() {
+    $("table.sapper-table").removeAttr("data-timer");
+}
 
-    // Считаем количество оставшихся маркеров
+/*
+*Функция подсчета кол-ва оставшихся маркеров(помеченных ячеек)
+*
+*/
     function getCountNotMarkedBombs() {
         var count = bombCount - $("table.sapper-table:first>tbody>tr>td>div[data-flag]").length;
         return count;
     }
-    // Отобразить оставшееся количество бомб
+/*
+*Функция для отображения оставшиегося кол-ва бомб
+*
+*/
     function displayCountBombs() {
+        //переменная,содержащая оставшееся кол-во бомб
         var span = $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-count");
+        //вывод этого кол-ва
         span.text(getCountNotMarkedBombs());
     }
-    // Отобразить победу
-    function displayWin() {
+/*
+*Функция для отображения победы
+*
+*/
+function displayWin() {
         stopTimer();
         var spanWin = document.createElement("span");
         $(spanWin).addClass("text-win").text("You win!");
         $("div.panel.sapper-table:first>.panel-heading>.panel-title").append(spanWin);
         setGameOver();
-    }
-    // Отобразить проигрыш
-    function displayLose() {
+}
+/*
+*Функция для отображения победы
+*
+*/
+function displayLose() {
         stopTimer();
         var spanLose = document.createElement("span");
         $(spanLose).addClass("text-lose").text("You lose!");
         $("div.panel.sapper-table:first>.panel-heading>.panel-title").append(spanLose);
         setGameOver();
-    }
+}
     // фабрика обработчика отпускания кнопок мыши с координатами ячейки
     function mouseHandlerFactory(rowIndex, colIndex) {
         return function (e) {
