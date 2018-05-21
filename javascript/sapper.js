@@ -9,12 +9,17 @@ function changeSizeHandler(e) {
     for (var i = 0; i < attrs.length; i++) {
         $("table.sapper-table:first").attr(attrs[i], button.attr(attrs[i]));
     }
+    //кол-во столбцов
     var columns = parseInt(button.attr("data-columns-count"));
+    //установки ширины между столбцами
     var width = columns * 30+2;
     $("div.panel.sapper-table:first").width(width);
     loadGame();
 }
-
+/*
+*Функция для инициализации элементов и переменных игры
+*
+*/
 function loadGame() {
     $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-refresh").remove();
     $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-count-icon").remove();
@@ -26,7 +31,7 @@ function loadGame() {
     var columnsCount = parseInt($("table.sapper-table").attr("data-columns-count"));
     // количество бомб
     var bombCount = parseInt($("table.sapper-table").attr("data-bomb-count"));
-    // бомбы
+    //массив бомб
     var bombs = [];
     // секунды таймера
     var seconds = 0;
@@ -364,51 +369,65 @@ function displayWin() {
         setGameOver();
 }
 /*
-*Функция для отображения победы
+*Функция для отображения проигрыша
 *
 */
 function displayLose() {
+        //остановка таймера
         stopTimer();
+        //создание элемента для отображения проигрыша в таблице ячеек
         var spanLose = document.createElement("span");
         $(spanLose).addClass("text-lose").text("You lose!");
         $("div.panel.sapper-table:first>.panel-heading>.panel-title").append(spanLose);
+        //вызов функции проигрыша
         setGameOver();
 }
-    // фабрика обработчика отпускания кнопок мыши с координатами ячейки
-    function mouseHandlerFactory(rowIndex, colIndex) {
+/*
+*Обработчик отпускания кнопок мыши с координатами ячейки
+*
+*/    
+function mouseHandlerFactory(rowIndex, colIndex) {
         return function (e) {
-            var cell = $(this);
-            document.onmouseup = undefined;
-            console.log("mouseup");
-            console.log("button", e.button);
-            switch (e.button) {
-                case 0:
-                    leftButtonHandler(cell, rowIndex, colIndex);
-                    break;
-                case 2:
-                    rigthButtonHandler(cell);
-                    break;
+        var cell = $(this);
+        document.onmouseup = undefined;
+        console.log("mouseup");
+        console.log("button", e.button);
+        switch (e.button) {
+        case 0:
+        leftButtonHandler(cell, rowIndex, colIndex);
+        break;
+        case 2:
+        rigthButtonHandler(cell);
+        break;
             }
         };
-    }
-    // обработчик отпущенной правой кнопки мыши
-    function rigthButtonHandler(cell) {
+}
+/*
+*Обработчик клика правой кнопки мыши
+*/    
+function rigthButtonHandler(cell) {
         if (!cell.hasClass("cell-closed")) {
             return;
         }
         addFlag(cell);
-    }
-    // обработчик нажатия кнопки мыши
-    function mousedownHandler(e) {
+}
+/*
+*Обработчик нажатия кнопки мыши над ячейкой
+*
+*/
+function mousedownHandler(e) {
         console.log("mousedown");
         if (e.button === 0) {
             var cell = $(this);
             cell.removeClass("cell-closed");
             document.onmouseup = function () { cell.addClass("cell-closed"); };
         }
-    }
-    // обработчик нажатия на ячейку
-    function leftButtonHandler(cell, rowIndex, colIndex) {
+}
+/*
+*Обработчик нажатия левой кнопки мыши
+*
+*/
+function leftButtonHandler(cell, rowIndex, colIndex) {
         var coord = [rowIndex, colIndex];
         // проверка первого клика для создания бомб
         firstClick(coord);
@@ -424,11 +443,16 @@ function displayLose() {
             // нарисуем цифру или очистим ячейки
             drawNumber(cell, rowIndex, colIndex);
         }
-    }
+}
     function crtElm(tag) {
         return document.createElement(tag);
     }
-    // создадим игровое поле, расставим индексы в ячейках и установим обработчики нажатия
+/*
+*Функция создания игрового поля
+*
+*Расставление индексов в ячейках и установление обработчиков нажатий мыши
+*
+*/
     function createField() {
         var table = $("table.sapper-table:first");
         table.html("");
@@ -488,5 +512,6 @@ function displayLose() {
             $("div.panel.sapper-table:first>.panel-heading>.panel-title").append(spRfsh);
         }
     }
+    //создание игрового поля
     createField();
 }
