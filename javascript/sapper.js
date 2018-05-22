@@ -8,7 +8,7 @@ function changeSizeHandler(e) {
     var attrs = ["data-rows-count", "data-columns-count", "data-bomb-count"];
     for (var i = 0; i < attrs.length; i++) {
         $("table.sapper-table:first").attr(attrs[i], button.attr(attrs[i]));
-    }
+}
     //кол-во столбцов
     var columns = parseInt(button.attr("data-columns-count"));
     //установки ширины между столбцами
@@ -43,27 +43,27 @@ function loadGame() {
     *метод random даст равномерное распределение
     *
     */
-    function getRandomInt(min, max) {
+function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+}
     /*
     *Функция для получения случайного числа для колонки
     *
     число будет в диапазоне от 0 до кол-во столбцов-1
     *
     */
-    function getRandomColumnIndex() {
+function getRandomColumnIndex() {
         return getRandomInt(0, columnsCount - 1);
-    }
+}
      /*
     *Функция для получения случайного числа для столбца
     *
     число будет в диапазоне от 0 до кол-во колонок-1
     *
     */
-    function getRandomRowIndex() {
+function getRandomRowIndex() {
         return getRandomInt(0, rowsCount - 1);
-    }
+}
 //функция для создания бомбы со случайными координатами
 /**
 * @return возвращает случайное число колонок и строк
@@ -110,7 +110,7 @@ function checkCell(cell) {
 *Функция для установки окончания игры
 *
 */ 
-    function setGameOver() {
+function setGameOver() {
         gameOver = true;
         var table = $("table.sapper-table:first");
         var tr = document.createElement("tr");
@@ -120,7 +120,7 @@ function checkCell(cell) {
         td.innerHTML = "Game Over";
         tr.appendChild(td);
         table.append(tr);
-    }
+}
 /*
 *Функция для проверки ячейки вокруг текущей ячейки с указанными координатами
 *
@@ -136,8 +136,8 @@ function lookAround(ri, ci, funct) {
         var endColumnIndex = ci === columnsCount - 1 ? columnsCount - 1 : ci + 1;
         //проход по строкам
         for (var bri = beginRowIndex; bri <= endRowIndex; bri++) {
-            //проход по столбцам
-            for (var bci = beginColumnIndex; bci <= endColumnIndex; bci++) {
+        //проход по столбцам
+        for (var bci = beginColumnIndex; bci <= endColumnIndex; bci++) {
                 if (ri === bri && ci === bci) {
                     continue;
                 }
@@ -279,7 +279,7 @@ function addFlag(cell) {
 *Функция для создания бомбы
 *
 */
-    function createBombs(firstCell) {
+function createBombs(firstCell) {
         bombs = [];
         for (var i = 0; i < bombCount; i++) {
             var bomb = getBomb();
@@ -289,7 +289,7 @@ function addFlag(cell) {
             }
             bombs.push(bomb);
         }
-    }
+}
 /*
 *Обработчик первого клика мыши по любой ячейки
 *
@@ -320,7 +320,7 @@ function updateTimer() {
      }
      seconds++;
      setTimeout(updateTimer, 1000);
-    }
+}
 /*
 *Функция запуска таймера
 *
@@ -338,25 +338,24 @@ function startTimer() {
 function stopTimer() {
     $("table.sapper-table").removeAttr("data-timer");
 }
-
 /*
 *Функция подсчета кол-ва оставшихся маркеров(помеченных ячеек)
 *
 */
-    function getCountNotMarkedBombs() {
+function getCountNotMarkedBombs() {
         var count = bombCount - $("table.sapper-table:first>tbody>tr>td>div[data-flag]").length;
         return count;
-    }
+}
 /*
 *Функция для отображения оставшиегося кол-ва бомб
 *
 */
-    function displayCountBombs() {
+function displayCountBombs() {
         //переменная,содержащая оставшееся кол-во бомб
         var span = $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-count");
         //вывод этого кол-ва
         span.text(getCountNotMarkedBombs());
-    }
+}
 /*
 *Функция для отображения победы
 *
@@ -444,9 +443,9 @@ function leftButtonHandler(cell, rowIndex, colIndex) {
             drawNumber(cell, rowIndex, colIndex);
         }
 }
-    function crtElm(tag) {
+function crtElm(tag) {
         return document.createElement(tag);
-    }
+}
 /*
 *Функция создания игрового поля
 *
