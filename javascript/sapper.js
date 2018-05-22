@@ -2,13 +2,17 @@ $(document).ready(function () {
     $(document).delegate("button[data-toggle='change-size']", "click", changeSizeHandler);
     loadGame();
 });
-function changeSizeHandler(e) {
+/**
+*Обработчик изменение размера игрового поля
+*
+*/
+    function changeSizeHandler(e) {
     e.preventDefault();
     var button = $(this);
     var attrs = ["data-rows-count", "data-columns-count", "data-bomb-count"];
     for (var i = 0; i < attrs.length; i++) {
         $("table.sapper-table:first").attr(attrs[i], button.attr(attrs[i]));
-}
+    }
     //кол-во столбцов
     var columns = parseInt(button.attr("data-columns-count"));
     //установки ширины между столбцами
@@ -16,11 +20,11 @@ function changeSizeHandler(e) {
     $("div.panel.sapper-table:first").width(width);
     loadGame();
 }
-/*
+/**
 *Функция для инициализации элементов и переменных игры
 *
 */
-function loadGame() {
+    function loadGame() {
     $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-refresh").remove();
     $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-count-icon").remove();
     $("div.panel.sapper-table:first>.panel-heading>.panel-title span.timer").remove();
@@ -37,60 +41,68 @@ function loadGame() {
     var seconds = 0;
     // игра окончена
     var gameOver = false;
-    /*
-    * Функция для рандомизации строк/столбцов
-    *
-    *метод random даст равномерное распределение
-    *
-    */
-function getRandomInt(min, max) {
+/**
+* Функция для рандомизации строк/столбцов
+*
+*метод random даст равномерное распределение
+*
+* @param int min, max миниму,максимум для рандомизации
+* @return int возвращает равномерное распределение
+*
+*/
+    function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-    /*
-    *Функция для получения случайного числа для колонки
-    *
-    число будет в диапазоне от 0 до кол-во столбцов-1
-    *
-    */
-function getRandomColumnIndex() {
+/**
+*Функция для получения случайного числа для колонки
+*
+число будет в диапазоне от 0 до кол-во столбцов-1
+*
+* @return int возвращает рандомное число колонок
+*
+*/
+     function getRandomColumnIndex() {
         return getRandomInt(0, columnsCount - 1);
 }
-     /*
-    *Функция для получения случайного числа для столбца
-    *
-    число будет в диапазоне от 0 до кол-во колонок-1
-    *
-    */
-function getRandomRowIndex() {
+/**
+*Функция для получения случайного числа для столбца
+*
+*число будет в диапазоне от 0 до кол-во колонок-1
+*
+* @return int возвращает рандомное чилсо столбцов
+*
+*/
+    function getRandomRowIndex() {
         return getRandomInt(0, rowsCount - 1);
 }
-//функция для создания бомбы со случайными координатами
-/**
-* @return возвращает случайное число колонок и строк
+/**функция для создания бомбы со случайными координатами
+*
+* @return int возвращает случайные координаты бомбы
+*
 */
-// Создать бомбу со случайными координатами
-function getBomb() {
+    function getBomb() {
         return [getRandomRowIndex(), getRandomColumnIndex()];
 }
-/*
+/**
 *Функция для проверки существование бомбы
 *
-проверяются координаты по массиву
-если бомба существует флаг = true
+*проверяются координаты по массиву если бомба существует флаг = true
+*
+* @param var bmb для проверки существования бомбы
 *
 */
-function checkBomb(bmb) {
+     function checkBomb(bmb) {
         //флаг существования бомбы
         var exists = false;
         for (var b = 0; b < bombs.length; b++) {
-        if (bmb[0] === bombs[b][0] && bmb[1] === bombs[b][1]) {
+            if (bmb[0] === bombs[b][0] && bmb[1] === bombs[b][1]) {
                 exists = true;
                 break;
             }
         }
         return exists;
 }
-/*
+/**
 *Функция для получения ячейки
 *
 */
@@ -99,14 +111,14 @@ function getCell(ri, ci) {
         var cell = $(row).find("td > div")[ci];
         return $(cell);
 }
-/*
+/**
 *Функция для проверки ячейки,что она еще не открыта
 *
 */    
 function checkCell(cell) {
         return cell.hasClass("cell-closed") && cell.attr("data-flag") === undefined;
 }
-/*
+/**
 *Функция для установки окончания игры
 *
 */ 
@@ -121,7 +133,7 @@ function setGameOver() {
         tr.appendChild(td);
         table.append(tr);
 }
-/*
+/**
 *Функция для проверки ячейки вокруг текущей ячейки с указанными координатами
 *
 */    
@@ -145,7 +157,7 @@ function lookAround(ri, ci, funct) {
             }
         }
 }
-/*
+/**
 *Функция для очистки ячейки вокруг с проверкой вокруг пустых ячеек
 *
 */
@@ -165,10 +177,11 @@ function clearAround(cell, ri, ci) {
              }
           });
 }
-/*
+/**
 *Функция для подсчёта кол-ва бомб вокруг ячейки по её координатам
 *
 *возвращает кол-во бомб
+*
 */ 
 function countBombsAround(ri, ci) {
         //счетчик
@@ -184,7 +197,7 @@ function countBombsAround(ri, ci) {
         }
         return count;
 }
-/*
+/**
 *Функция для отрисовки бомбы в ячейке
 *
 */
@@ -201,7 +214,7 @@ function drawBomb(ri, ci) {
             //добавление бомбы
             .addClass("cell-bomb");
 }
-/*
+/**
 *Функция для отображения всех бомб 
 *
 *все бомбы отображаются при проигрыше
@@ -224,7 +237,7 @@ function clearCell(cell) {
         }
         cell.removeClass("cell-closed");
 }
-/*
+/**
 *Функция подсчета кол-ва оставшихся закрытых ячеек
 *
 */ 
@@ -235,7 +248,7 @@ function checkClosedCells() {
         displayWin();
         }
 }
-/*
+/**
 *Функция определения числа кол-ва бомб вокруг ячейки
 *
 */   
@@ -256,7 +269,7 @@ function drawNumber(cell, ri, ci) {
         }
         checkClosedCells();
 }
-/*
+/**
 *Функция для добавления отметки бомбы(флаг)
 *
 */
@@ -268,14 +281,14 @@ function addFlag(cell) {
         } else {
             if (getCountNotMarkedBombs() <= 0) {
                 return false;
-            }
+          }
             cell.addClass("glyphicon")
                 .addClass("glyphicon-map-marker")
                 .attr("data-flag", "true");
         }
         displayCountBombs();
 }
-/*
+/**
 *Функция для создания бомбы
 *
 */
@@ -290,10 +303,11 @@ function createBombs(firstCell) {
             bombs.push(bomb);
         }
 }
-/*
+/**
 *Обработчик первого клика мыши по любой ячейки
 *
 *после нажатия начинается игра и запускается таймер
+*
 */
 function firstClick(firstCell) {
         if ($("table.sapper-table[data-timer]").length < 1) {
@@ -303,7 +317,7 @@ function firstClick(firstCell) {
             startTimer();
         }
 }
-/*
+/**
 *Функция обновления время на таймере
 *
 */
@@ -321,7 +335,7 @@ function updateTimer() {
      seconds++;
      setTimeout(updateTimer, 1000);
 }
-/*
+/**
 *Функция запуска таймера
 *
 */
@@ -331,14 +345,14 @@ function startTimer() {
         $("table.sapper-table").attr("data-timer", "true");
         updateTimer();
 }
-/*
+/**
 *Функция остановки таймера
 *
 */
 function stopTimer() {
     $("table.sapper-table").removeAttr("data-timer");
 }
-/*
+/**
 *Функция подсчета кол-ва оставшихся маркеров(помеченных ячеек)
 *
 */
@@ -346,7 +360,7 @@ function getCountNotMarkedBombs() {
         var count = bombCount - $("table.sapper-table:first>tbody>tr>td>div[data-flag]").length;
         return count;
 }
-/*
+/**
 *Функция для отображения оставшиегося кол-ва бомб
 *
 */
@@ -356,7 +370,7 @@ function displayCountBombs() {
         //вывод этого кол-ва
         span.text(getCountNotMarkedBombs());
 }
-/*
+/**
 *Функция для отображения победы
 *
 */
@@ -367,7 +381,7 @@ function displayWin() {
         $("div.panel.sapper-table:first>.panel-heading>.panel-title").append(spanWin);
         setGameOver();
 }
-/*
+/**
 *Функция для отображения проигрыша
 *
 */
@@ -381,7 +395,7 @@ function displayLose() {
         //вызов функции проигрыша
         setGameOver();
 }
-/*
+/**
 *Обработчик отпускания кнопок мыши с координатами ячейки
 *
 */    
@@ -401,8 +415,9 @@ function mouseHandlerFactory(rowIndex, colIndex) {
             }
         };
 }
-/*
+/**
 *Обработчик клика правой кнопки мыши
+*
 */    
 function rigthButtonHandler(cell) {
         if (!cell.hasClass("cell-closed")) {
@@ -410,7 +425,7 @@ function rigthButtonHandler(cell) {
         }
         addFlag(cell);
 }
-/*
+/**
 *Обработчик нажатия кнопки мыши над ячейкой
 *
 */
@@ -422,7 +437,7 @@ function mousedownHandler(e) {
             document.onmouseup = function () { cell.addClass("cell-closed"); };
         }
 }
-/*
+/**
 *Обработчик нажатия левой кнопки мыши
 *
 */
@@ -446,13 +461,13 @@ function leftButtonHandler(cell, rowIndex, colIndex) {
 function crtElm(tag) {
         return document.createElement(tag);
 }
-/*
+/**
 *Функция создания игрового поля
 *
 *Расставление индексов в ячейках и установление обработчиков нажатий мыши
 *
 */
-    function createField() {
+function createField() {
         var table = $("table.sapper-table:first");
         table.html("");
         seconds = 0;
@@ -489,7 +504,7 @@ function crtElm(tag) {
 
         } else {
             spanCountBombs.text(getCountNotMarkedBombs());
-        }
+          }
         // Создадим отображения таймера
         var spanTimer = $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-refresh");
         if (spanTimer.length < 1) {
