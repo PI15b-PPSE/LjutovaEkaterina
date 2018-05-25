@@ -448,6 +448,8 @@ function mouseHandlerFactory(rowIndex, colIndex) {
 /**
 *Обработчик клика правой кнопки мыши
 *
+* @param var cell переменная которая хранит ячейку
+*
 */    
 function rigthButtonHandler(cell) {
         if (!cell.hasClass("cell-closed")) {
@@ -469,6 +471,9 @@ function mousedownHandler(e) {
 }
 /**
 *Обработчик нажатия левой кнопки мыши
+*
+* @param var cell переменная содержащая ячейку
+* @param var rowIndex, colIndex координаты ячейки
 *
 */
 function leftButtonHandler(cell, rowIndex, colIndex) {
