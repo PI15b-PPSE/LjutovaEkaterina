@@ -105,6 +105,8 @@ $(document).ready(function () {
 /**
 *Функция для получения ячейки
 *
+* @param var ri, ci координаты ячейки
+* @return var cell возврат ячейки
 */
 function getCell(ri, ci) {
         var row = $("table.sapper-table>tbody>tr")[ri];
@@ -113,6 +115,8 @@ function getCell(ri, ci) {
 }
 /**
 *Функция для проверки ячейки,что она еще не открыта
+*
+* @return var cell возврат закрытой ячейки
 *
 */    
 function checkCell(cell) {
@@ -135,6 +139,10 @@ function setGameOver() {
 }
 /**
 *Функция для проверки ячейки вокруг текущей ячейки с указанными координатами
+*
+* @param var ri, ci переменные для проход циклом по столбцам и строкам
+* @param var funct принимает парамерты @param var bri, bci
+* которые содержат провереные строки и столбцы
 *
 */    
 function lookAround(ri, ci, funct) {
@@ -160,6 +168,9 @@ function lookAround(ri, ci, funct) {
 /**
 *Функция для очистки ячейки вокруг с проверкой вокруг пустых ячеек
 *
+* @param var cell ячейка
+* @paran var ri, ci  координаты ячейки
+*
 */
 function clearAround(cell, ri, ci) {
         lookAround(ri, ci, function (ri2, ci2) {
@@ -180,7 +191,9 @@ function clearAround(cell, ri, ci) {
 /**
 *Функция для подсчёта кол-ва бомб вокруг ячейки по её координатам
 *
-*возвращает кол-во бомб
+* @param var ri, ci переменные для проверки бомбы возле текущей ячейки
+* @return int count возвращает кол-во бомб
+*
 *
 */ 
 function countBombsAround(ri, ci) {
@@ -199,6 +212,8 @@ function countBombsAround(ri, ci) {
 }
 /**
 *Функция для отрисовки бомбы в ячейке
+*
+* @param var ri, ci координаты ячейки
 *
 */
 function drawBomb(ri, ci) {
@@ -230,6 +245,8 @@ function drawAllBombs() {
 /*
 *Функция очистки ячейки
 *
+* @param var cell переменная для очистки ячейки
+*
 */
 function clearCell(cell) {
         if (!checkCell(cell)) {
@@ -250,6 +267,9 @@ function checkClosedCells() {
 }
 /**
 *Функция определения числа кол-ва бомб вокруг ячейки
+*
+* @param var cell переменнная содержащая ячейку
+* @param var ri, ci координаты ячейки
 *
 */   
 function drawNumber(cell, ri, ci) {
@@ -272,6 +292,8 @@ function drawNumber(cell, ri, ci) {
 /**
 *Функция для добавления отметки бомбы(флаг)
 *
+* @param var cell переменная содержащая ячейку
+*
 */
 function addFlag(cell) {
         if (cell.attr("data-flag") === "true") {
@@ -291,6 +313,8 @@ function addFlag(cell) {
 /**
 *Функция для создания бомбы
 *
+* @param var firstCell переменная содержащая первую ячейку
+*
 */
 function createBombs(firstCell) {
         bombs = [];
@@ -306,7 +330,9 @@ function createBombs(firstCell) {
 /**
 *Обработчик первого клика мыши по любой ячейки
 *
-*после нажатия начинается игра и запускается таймер
+* @param var firstCell переменная содержащая первую ячейку
+* после нажатия начинается игра и запускается таймер
+*
 *
 */
 function firstClick(firstCell) {
@@ -355,6 +381,8 @@ function stopTimer() {
 /**
 *Функция подсчета кол-ва оставшихся маркеров(помеченных ячеек)
 *
+* @return int count возвращает кол-во оставшихся помеченных ячеек
+* 
 */
 function getCountNotMarkedBombs() {
         var count = bombCount - $("table.sapper-table:first>tbody>tr>td>div[data-flag]").length;
@@ -398,6 +426,8 @@ function displayLose() {
 /**
 *Обработчик отпускания кнопок мыши с координатами ячейки
 *
+* @param int rowIndex, colIndex координаты ячейки
+* 
 */    
 function mouseHandlerFactory(rowIndex, colIndex) {
         return function (e) {
