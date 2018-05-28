@@ -386,7 +386,12 @@ function stopTimer() {
 */
 function getCountNotMarkedBombs() {
         var count = bombCount - $("table.sapper-table:first>tbody>tr>td>div[data-flag]").length;
-        return count;
+        if (count > 0) {
+        return count;}
+		else (count == 0) 
+		{
+			displayLose();
+		}
 }
 /**
 *Функция для отображения оставшиегося кол-ва бомб
