@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="PPPI/styles.css"?>
+<book xml:id="simple_book" xmlns="http://docbook.org/ns/docbook" version="5.0">
+    <info><title>Документация к проекту "Saper Game Application"</title>
+        <author><personname><firstname>Екатерина</firstname>
+            <surname>Лютова</surname></personname></author>
+        <copyright><year>2018</year><holder>Екатерина Лютова</holder></copyright></info>
+    <preface><title>Преамбула</title><address>ekaterina_ljutova1998@rambler.ru</address></preface>
+    <chapter xml:id="chapter_1">
+        <title>О игре</title>
+        <para>Сапер — это игра головоломка, где игроку нужно разминировать минное поле, помечая флажками ячейки, на которых могут быть мины, для их обнаружения на соседних пустых клетках есть подсказки в виде чисел.</para>
+        <para>Плоское или объёмное игровое поле разделено на смежные ячейки, некоторые из которых «заминированы»; количество «заминированных» ячеек известно.</para>
+         <para>Целью игры является открытие всех ячеек, не содержащих мины.</para>
+         <para>Игрок открывает ячейки, стараясь не открыть ячейку с миной. Открыв ячейку с миной, он проигрывает.</para>
+     </chapter>
+    <chapter xml:id="chapter_2">
+        <title>Игоровой процесс</title>
+        <para>В игре есть 3 уровния сложности. Уровень сложности определяется размером игрового поля.</para>
+        <para>Чем больше поле, тем сложнее игра.</para>
+        <para>С первым кликом по ячейке активизируется таймер</para>
+        <para>Игроку дается ограниченное количество меток для обозначения бомб</para>
+        <para> Открыв все «не заминированные» ячейки, игрок выигрывает. </para>
+    </chapter>
+    <chapter xml:id="chapter_3">
+        <title>Сценарии игры</title>
+        <para>Игра предоставляет различные сценарии завершения игры.</para>
+        <section>
+            <title>"Взорвался"</title>
+             <example><title>Игрок выбрал ячейку с бомбой</title>
+                <programlisting>
+                    <![CDATA[ 
+        javascript
+        var coord = [rowIndex, colIndex];
+        firstClick(coord);
+        if (cell.attr("data-flag") === "true") {
+            return;
+        }
+        
+        if (checkBomb(coord)) {
+            
+            drawAllBombs();
+        } else {
+           
+            drawNumber(cell, rowIndex, colIndex);
+        }
+        }]]>
+             </programlisting>
+            </example>
+        </section>
+        <section>
+            <title>У игрока закончились метки для обозначения бомб.</title>
+            <example><title>Израсходовано ограниченное кол-во меток</title>
+                <programlisting>
+                    <![CDATA[ 
+        javascript
+         var count = bombCount - $("table.sapper-table:first>tbody>tr>td>div[data-flag]").length;
+		if (count > 0) {
+        return count;}
+		else (count == 0) 
+		{
+			displayLose();
+		}
+        }
+        }]]>
+            </programlisting>
+            </example>
+        </section>
+        <section>
+            <title>Окончания игры с победой</title>
+            <example><title>Открыты все ячейки кроме ячеек содержащих бомбы</title>
+                <programlisting>
+                    <![CDATA[ 
+        javascript
+         var count = countBombsAround(ri, ci);
+        console.log("count=", count);
+        // очистим ячейку
+        clearCell(cell);
+        if (count > 0) {
+            // если вокруг есть бомбы, то рисуем цифру
+            cell.text(count);
+            cell.addClass("cell-number")
+                .addClass("number" + count);
+        } else {
+            // иначе очищаем ячейки вокруг
+            clearAround(cell, ri, ci);
+        }
+        checkClosedCells();
+        }]]>
+                      
+            </programlisting>
+            </example>
+        </section>
+    </chapter> 
+</book>
