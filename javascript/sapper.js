@@ -108,7 +108,7 @@ $(document).ready(function () {
 * @param var ri, ci координаты ячейки
 * @return var cell возврат ячейки
 */
-function getCell(ri, ci) {
+    function getCell(ri, ci) {
         var row = $("table.sapper-table>tbody>tr")[ri];
         var cell = $(row).find("td > div")[ci];
         return $(cell);
@@ -119,14 +119,14 @@ function getCell(ri, ci) {
 * @return var cell возврат закрытой ячейки
 *
 */    
-function checkCell(cell) {
+    function checkCell(cell) {
         return cell.hasClass("cell-closed") && cell.attr("data-flag") === undefined;
 }
 /**
 *Функция для установки окончания игры
 *
 */ 
-function setGameOver() {
+    function setGameOver() {
         gameOver = true;
         var table = $("table.sapper-table:first");
         var tr = document.createElement("tr");
@@ -145,7 +145,7 @@ function setGameOver() {
 * которые содержат провереные строки и столбцы
 *
 */    
-function lookAround(ri, ci, funct) {
+   function lookAround(ri, ci, funct) {
         //первая строка
         var beginRowIndex = ri === 0 ? 0 : ri - 1;
         //последняя строка
@@ -172,7 +172,7 @@ function lookAround(ri, ci, funct) {
 * @paran var ri, ci  координаты ячейки
 *
 */
-function clearAround(cell, ri, ci) {
+   function clearAround(cell, ri, ci) {
         lookAround(ri, ci, function (ri2, ci2) {
             var cell2 = getCell(ri2, ci2);
             if (checkCell(cell2)) {
@@ -196,7 +196,7 @@ function clearAround(cell, ri, ci) {
 *
 *
 */ 
-function countBombsAround(ri, ci) {
+   function countBombsAround(ri, ci) {
         //счетчик
         var count = 0;
         //проход по циклу
@@ -216,7 +216,7 @@ function countBombsAround(ri, ci) {
 * @param var ri, ci координаты ячейки
 *
 */
-function drawBomb(ri, ci) {
+   function drawBomb(ri, ci) {
         //получение ячейки
         var cell = getCell(ri, ci);
         //очистка ячейки
@@ -235,7 +235,7 @@ function drawBomb(ri, ci) {
 *все бомбы отображаются при проигрыше
 *
 */ 
-function drawAllBombs() {
+   function drawAllBombs() {
    for (var q = 0; q < bombs.length; q++) {
    drawBomb(bombs[q][0], bombs[q][1]);
    }
@@ -248,7 +248,7 @@ function drawAllBombs() {
 * @param var cell переменная для очистки ячейки
 *
 */
-function clearCell(cell) {
+   function clearCell(cell) {
         if (!checkCell(cell)) {
             return;
         }
@@ -258,7 +258,7 @@ function clearCell(cell) {
 *Функция подсчета кол-ва оставшихся закрытых ячеек
 *
 */ 
-function checkClosedCells() {
+   function checkClosedCells() {
         //сравнение ячеек с количеством бомб
         if ($("table.sapper-table > tbody > tr > td > div.cell-closed").length === bombCount) {
         //отображение выигрыша
@@ -272,7 +272,7 @@ function checkClosedCells() {
 * @param var ri, ci координаты ячейки
 *
 */   
-function drawNumber(cell, ri, ci) {
+     function drawNumber(cell, ri, ci) {
         // подсчитаем количество бомб вокруг ячеек
         var count = countBombsAround(ri, ci);
         console.log("count=", count);
@@ -295,7 +295,7 @@ function drawNumber(cell, ri, ci) {
 * @param var cell переменная содержащая ячейку
 *
 */
-function addFlag(cell) {
+    function addFlag(cell) {
         if (cell.attr("data-flag") === "true") {
             cell.removeClass("glyphicon")
                 .removeClass("glyphicon-map-marker")
@@ -316,7 +316,7 @@ function addFlag(cell) {
 * @param var firstCell переменная содержащая первую ячейку
 *
 */
-function createBombs(firstCell) {
+    function createBombs(firstCell) {
         bombs = [];
         for (var i = 0; i < bombCount; i++) {
             var bomb = getBomb();
@@ -335,7 +335,7 @@ function createBombs(firstCell) {
 *
 *
 */
-function firstClick(firstCell) {
+    function firstClick(firstCell) {
         if ($("table.sapper-table[data-timer]").length < 1) {
             //создание бомб
             createBombs(firstCell);
@@ -347,7 +347,7 @@ function firstClick(firstCell) {
 *Функция обновления время на таймере
 *
 */
-function updateTimer() {
+    function updateTimer() {
      if (gameOver) {
      stopTimer();
      return;
@@ -365,7 +365,7 @@ function updateTimer() {
 *Функция запуска таймера
 *
 */
-function startTimer() {
+    function startTimer() {
         seconds = 0;
         gameOver = false;
         $("table.sapper-table").attr("data-timer", "true");
@@ -375,7 +375,7 @@ function startTimer() {
 *Функция остановки таймера
 *
 */
-function stopTimer() {
+    function stopTimer() {
     $("table.sapper-table").removeAttr("data-timer");
 }
 /**
@@ -384,7 +384,7 @@ function stopTimer() {
 * @return int count возвращает кол-во оставшихся помеченных ячеек
 * 
 */
-function getCountNotMarkedBombs() {
+    function getCountNotMarkedBombs() {
         var count = bombCount - $("table.sapper-table:first>tbody>tr>td>div[data-flag]").length;
         if (count > 0) {
         return count;}
@@ -397,7 +397,7 @@ function getCountNotMarkedBombs() {
 *Функция для отображения оставшиегося кол-ва бомб
 *
 */
-function displayCountBombs() {
+    function displayCountBombs() {
         //переменная,содержащая оставшееся кол-во бомб
         var span = $("div.panel.sapper-table:first>.panel-heading>.panel-title span.bombs-count");
         //вывод этого кол-ва
@@ -407,7 +407,7 @@ function displayCountBombs() {
 *Функция для отображения победы
 *
 */
-function displayWin() {
+    function displayWin() {
         stopTimer();
         var spanWin = document.createElement("span");
         $(spanWin).addClass("text-win").text("You win!");
@@ -418,7 +418,7 @@ function displayWin() {
 *Функция для отображения проигрыша
 *
 */
-function displayLose() {
+    function displayLose() {
         //остановка таймера
         stopTimer();
         //создание элемента для отображения проигрыша в таблице ячеек
@@ -434,7 +434,7 @@ function displayLose() {
 * @param int rowIndex, colIndex координаты ячейки
 * 
 */    
-function mouseHandlerFactory(rowIndex, colIndex) {
+    function mouseHandlerFactory(rowIndex, colIndex) {
         return function (e) {
         var cell = $(this);
         document.onmouseup = undefined;
@@ -456,7 +456,7 @@ function mouseHandlerFactory(rowIndex, colIndex) {
 * @param var cell переменная которая хранит ячейку
 *
 */    
-function rigthButtonHandler(cell) {
+    function rigthButtonHandler(cell) {
         if (!cell.hasClass("cell-closed")) {
             return;
         }
@@ -466,7 +466,7 @@ function rigthButtonHandler(cell) {
 *Обработчик нажатия кнопки мыши над ячейкой
 *
 */
-function mousedownHandler(e) {
+    function mousedownHandler(e) {
         console.log("mousedown");
         if (e.button === 0) {
             var cell = $(this);
@@ -481,7 +481,7 @@ function mousedownHandler(e) {
 * @param var rowIndex, colIndex координаты ячейки
 *
 */
-function leftButtonHandler(cell, rowIndex, colIndex) {
+    function leftButtonHandler(cell, rowIndex, colIndex) {
         var coord = [rowIndex, colIndex];
         // проверка первого клика для создания бомб
         firstClick(coord);
@@ -498,7 +498,7 @@ function leftButtonHandler(cell, rowIndex, colIndex) {
             drawNumber(cell, rowIndex, colIndex);
         }
 }
-function crtElm(tag) {
+    function crtElm(tag) {
         return document.createElement(tag);
 }
 /**
@@ -507,7 +507,7 @@ function crtElm(tag) {
 *Расставление индексов в ячейках и установление обработчиков нажатий мыши
 *
 */
-function createField() {
+    function createField() {
         var table = $("table.sapper-table:first");
         table.html("");
         seconds = 0;
